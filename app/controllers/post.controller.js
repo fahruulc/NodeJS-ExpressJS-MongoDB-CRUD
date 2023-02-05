@@ -1,10 +1,25 @@
 const db = require("../models");
 const Post = db.posts;
+const expressLayouts = require("express-ejs-layouts");
+const express = require("express");
+const app = express();
+
+app.set("view engine", "ejs");
+app.use(expressLayouts);
+
+app.use(express.json());
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 
 exports.findAll = (req, res) => {
   Post.find()
     .then((result) => {
-      res.send(result);
+      res
+        .send({
+          title: "home page",
+          result,
+        })
+        .render("../views/index");
     })
     .catch((err) => {
       res.status(500).send({
